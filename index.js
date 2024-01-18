@@ -15,6 +15,7 @@ import {
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
+import { sanitizeHtml } from "./components/sanitizeHtml.js";
 
 export let user = getUserFromLocalStorage();
 export let page = null;
@@ -110,13 +111,26 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
+        
         // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        goToPage(POSTS_PAGE);
+
+      const textareaInputElement = document.getElementById("textarea-input");
+      postNew({
+        description: sanitizeHtml(textareaInputElement.value),
+        imageUrl,
+        token: getToken()
+      }).then((response) => {
+        renderPostsPageComponent()
+      })
+      .catch((error) => {
+        alert(error);
+        console.warn(error)
+      })
+      console.log("Добавляю пост...", { description, imageUrl });
+      goToPage(POSTS_PAGE);
       },
     });
   }
-
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
@@ -124,8 +138,9 @@ const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
+    
     // TODO: реализовать страницу фотографию пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
+    //appEl.innerHTML = "Здесь будет страница фотографий пользователя";
     return;
   }
 };
