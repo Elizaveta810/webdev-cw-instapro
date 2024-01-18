@@ -1,3 +1,3 @@
 export const sanitizeHtml = (htmlString) => {
-  return htmlString.replaiceAll("&", "&amp;").replaiceAll("<", "&lt;").replaiceAll(">", "&gt;").replaiceAll('"', "&quot;");
+  return htmlString.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 };
