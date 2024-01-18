@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { getPosts, postNew } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -123,7 +123,7 @@ const renderApp = () => {
         renderPostsPageComponent()
       })
       .catch((error) => {
-        alert(error);
+       // alert(error);
         console.warn(error)
       })
       console.log("Добавляю пост...", { description, imageUrl });
