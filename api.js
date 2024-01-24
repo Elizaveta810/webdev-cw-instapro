@@ -68,29 +68,37 @@ export function uploadImage({ file }) {
     return response.json();
   });
 }
- //Добавить новый пост
- export function postNew({ description, imageUrl, token}) {
-  return fetch(postsHost,
-    {
-      method: "POST",
-      headers: {
-        Authorization: token,
-      },
-      body: JSON.stringify({
-        description,
-        imageUrl,
-      }),
-    }).then((response) => {
-      console.log(response);
-      if (response.status === 500) {
-        return Promise.reject("ошибка сервера");
-      }
-      if (response.status===401){
-        return Promise.reject("не авторизован");
-      }
-      if (response.status===400){
-        return Promise.reject("не ввендено описание картинки");
-      }
-      return response.json();
-    });
+//Добавить новый пост
+export function postNew({ description, imageUrl, token }) {
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl,
+    }),
+  }).then((response) => {
+    console.log(response);
+    if (response.status === 500) {
+      return Promise.reject("ошибка сервера");
+    }
+    if (response.status === 401) {
+      return Promise.reject("не авторизован");
+    }
+    if (response.status === 400) {
+      return Promise.reject("не ввендено описание картинки");
+    }
+    return response.json();
+  });
+}
+
+export function getUserPosts({ id }) {
+  return fetch(postsHost + "/user-posts/" + id, {
+    method: "GET",
+  }).then((response) => {
+    return response.json();
+  })
+
 }
