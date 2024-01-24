@@ -1,11 +1,9 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
-import {formatDistance} from "date-fns";
-import {ru} from "date-fns/locale";
-
-
-
+import { posts, goToPage, getToken } from "../index.js";
+import { addLike, deleteLike } from "../api.js";
+import { formatDistance } from "date-fns";
+import { ru } from "date-fns/locale";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
@@ -28,11 +26,21 @@ export function renderPostsPageComponent({ appEl }) {
         <img class="post-image" src="${post.imageUrl}">
       </div>
       <div class="post-likes">
-        <button data-post-id="${post.id}" data-like="${post.isLiked ? 'true' : ''}" data-index="${index}"class="like-button">
-          <img src="${post.isLiked ? `./assets/images/like-active.svg` : `./assets/images/like-not-active.svg`}">
+        <button data-post-id="${post.id}" data-like="${
+        post.isLiked ? "true" : ""
+      }" data-index="${index}"class="like-button">
+          <img src="${
+            post.isLiked
+              ? `./assets/images/like-active.svg`
+              : `./assets/images/like-not-active.svg`
+          }">
         </button>
         <p class="post-likes-text">
-          Нравится: <strong>${post.likes.length >= 1 ? post.likes[0].name : '0'}</strong>${(post.likes.length - 1) > 0 ? 'и ещё' + ' ' + (post.likes.length - 1) : ''}
+          Нравится: <strong>${
+            post.likes.length >= 1 ? post.likes[0].name : "0"
+          }</strong>${
+        post.likes.length - 1 > 0 ? "и ещё" + " " + (post.likes.length - 1) : ""
+      }
         </p>
       </div>
       <p class="post-text">
@@ -40,13 +48,15 @@ export function renderPostsPageComponent({ appEl }) {
         ${post.description}
       </p>
       <p class="post-date">
-      ${formatDistance(post.createdAt, new Date(), { addSuffix: true, locale: ru })}
+      ${formatDistance(post.createdAt, new Date(), {
+        addSuffix: true,
+        locale: ru,
+      })}
       </p>
     </li>`;
     })
     .join("");
 
- 
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
@@ -66,6 +76,37 @@ export function renderPostsPageComponent({ appEl }) {
       goToPage(USER_POSTS_PAGE, {
         userId: userEl.dataset.userId,
       });
+    });
+  }
+  initLikeListeners();
+}
+
+export function initLikeListeners(userId) {
+  const likeButtonList = document.querySelectorAll(".like-button");
+  for (const likeButton of likeButtonList) {
+    likeButton.addEventListener("click", () => {
+      console.log(likeButton.dataset);
+      if (likeButton.dataset.isLiked === "true") {
+        deleteLike({ id: likeButton.dataset.postId, token: getToken() }).then(
+          () => {
+            if (userId) {
+              goToPage(USER_POSTS_PAGE, { userId });
+            } else {
+              goToPage(POSTS_PAGE, { noLoading: true });
+            }
+          }
+        );
+      } else {
+        addLike({ id: likeButton.dataset.postId, token: getToken() }).then(
+          () => {
+            if (userId) {
+              goToPage(USER_POSTS_PAGE, { userId });
+            } else {
+              goToPage(POSTS_PAGE, { noLoading: true });
+            }
+          }
+        );
+      }
     });
   }
 }

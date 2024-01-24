@@ -1,6 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
+import { initLikeListeners } from "./posts-page-component.js";
 import {formatDistance} from "date-fns";
 import {ru} from "date-fns/locale";
 
@@ -65,4 +66,5 @@ export function renderUserPostPageComponent({ appEl }) {
       });
     });
   }
+  initLikeListeners(posts[0].user.id)
 }

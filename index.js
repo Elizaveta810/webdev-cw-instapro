@@ -23,7 +23,7 @@ export let posts = [];
 
 export let token = window.localStorage.getItem("token");
 
-const getToken = () => {
+export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
@@ -147,7 +147,7 @@ const renderApp = () => {
 
     // TODO: реализовать страницу фотографию пользвателя
     //appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+    return 
   }
 };
 
