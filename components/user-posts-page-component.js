@@ -1,21 +1,20 @@
-import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { posts} from "../index.js";
 import { initLikeListeners } from "./posts-page-component.js";
 import {formatDistance} from "date-fns";
 import {ru} from "date-fns/locale";
 
 
+const appEl = document.getElementById("app");
 
-
-export function renderUserPostPageComponent({ appEl }) {
+export function renderUserPostPageComponent() {
  
   console.log("Актуальный список постов:", posts);
 
 
 
  
-  const postsHtml = posts
+  const postsUserHtml = posts
     .map((post, index) => {
       return `<li class="post">
       <div class="post-header" data-user-id="${post.user.id}">
@@ -26,7 +25,7 @@ export function renderUserPostPageComponent({ appEl }) {
         <img class="post-image" src="${post.imageUrl}">
       </div>
       <div class="post-likes">
-        <button data-post-id="${post.id}" data-like="${post.isLiked ? 'true' : ''}" data-index="${index}"class="like-button">
+        <button data-post-id="${post.id}" data-is-liked="${post.isLiked}" data-like="${post.isLiked ? 'true' : ''}" data-index="${index}"class="like-button">
           <img src="${post.isLiked ? `./assets/images/like-active.svg` : `./assets/images/like-not-active.svg`}">
         </button>
         <p class="post-likes-text">
@@ -45,26 +44,26 @@ export function renderUserPostPageComponent({ appEl }) {
     .join("");
 
  
-  const appHtml = `
+ const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
                 <ul class="posts">
-                ${postsHtml}
-                </ul>
-              </div>`;
+                ${postsUserHtml}
+                </ul>`
 
-  appEl.innerHTML = appHtml;
+
+  appEl.innerHTML = appHtmlHtml;
 
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });
 
-  for (let userEl of document.querySelectorAll(".post-header")) {
+ /*for (let userEl of document.querySelectorAll(".post-header")) {
     userEl.addEventListener("click", () => {
       goToPage(USER_POSTS_PAGE, {
         userId: userEl.dataset.userId,
       });
     });
-  }
+  }*/
   initLikeListeners(posts[0].user.id)
 }

@@ -5,7 +5,10 @@ import { addLike, deleteLike } from "../api.js";
 import { formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 
-export function renderPostsPageComponent({ appEl }) {
+
+const appEl = document.getElementById("app");
+
+export function renderPostsPageComponent() {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
@@ -26,7 +29,7 @@ export function renderPostsPageComponent({ appEl }) {
         <img class="post-image" src="${post.imageUrl}">
       </div>
       <div class="post-likes">
-        <button data-post-id="${post.id}" data-like="${
+        <button data-post-id="${post.id}" data-is-liked="${post.isLiked}" data-like="${
         post.isLiked ? "true" : ""
       }" data-index="${index}"class="like-button">
           <img src="${
